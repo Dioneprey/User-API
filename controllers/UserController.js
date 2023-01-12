@@ -1,5 +1,10 @@
 var User = require("../models/User")
 var PasswordToken = require('../models/PasswordToken')
+var jwt = require("jsonwebtoken")
+var bcrypt = require ('bcrypt')
+
+var secret = "something"
+
 class UserController {
     async index(req,res) {
         var users = await User.findAll()
@@ -86,6 +91,29 @@ class UserController {
             res.status(200).send("Password changed")
         }else {
             res.status(406).send("Invalid token")
+        }
+    }
+
+    async login(req,res){
+        var {email, password} = req.body
+        
+        var user = await User.findByEmail(email)
+
+        if(user != undefined){
+
+            var result = await bcrypt.compare(password,user.password)
+            
+            if(result){
+
+                var token = jwt.sign({ email: user.email, role: user.role }, secret)
+                res.status(200).send({token:token})
+
+            } else {
+                res.status(406).send("Wrong password. Please try again")
+            }
+
+        }else {
+            res.json({Status: false})
         }
     }
 
