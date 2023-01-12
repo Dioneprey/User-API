@@ -20,7 +20,7 @@ class UserController {
 
     async create(req,res) {
         
-        var {email, name, password} = req.body
+        var {email, password, name} = req.body
 
         if(email == undefined) {
             res.status(400).send("Invalid email")
@@ -43,7 +43,7 @@ class UserController {
         var result = await User.update(id,email,name,role)
         if(result != undefined) {
             if(result.status){
-                res.send("KO")
+                res.send("OK")
             }else{
                 res.status("406").send(result.err)
             }
@@ -82,7 +82,7 @@ class UserController {
 
         if(isTokenValid.status){
             
-            await User.changePassword(password, isTokenValid.token.user_id,isTokenValid.token.token)
+            await User.changePassword(password,isTokenValid.token.user_id,isTokenValid.token.token)
             res.status(200).send("Password changed")
         }else {
             res.status(406).send("Invalid token")

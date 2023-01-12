@@ -44,13 +44,14 @@ class PasswordToken{
                 }
 
             } else {
-                return false
+                return {status: false}
             }
         } catch(err){
             console.log(err)
-            return false
+            return {status: false}
         }  
     }
+    
 }
 
-module.exports = new PasswordToken
+module.exports = new PasswordToken()
